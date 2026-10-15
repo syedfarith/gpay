@@ -1,10 +1,3 @@
-"""QR scanning for UPI-style payment links.
-
-Decodes a UPI deep link (upi://pay?pa=...&pn=...&am=...&tn=...) from either
-a webcam feed or an image file, using OpenCV's built-in QRCodeDetector
-(no external zbar dependency needed).
-"""
-
 from __future__ import annotations
 
 import re
@@ -38,22 +31,12 @@ def _truncate(text: str, limit: int) -> str:
 
 
 def _name_from_vpa(vpa: str) -> str:
-    """Derive a readable display name from the VPA handle (e.g. rahul.kumar@okaxis -> Rahul Kumar)."""
     local = vpa.split("@", 1)[0]
     words = [w for w in re.split(r"[._\-+]+", local) if w]
     return _collapse(" ".join(w[:1].upper() + w[1:] for w in words))
 
 
 def parse_upi_uri(data: str) -> UpiPayload:
-    """Parse a `upi://pay?...` string into its fields.
-
-    The payee name comes from the QR's `pn` parameter (as encoded by the
-    bank/app that generated it). If `pn` is missing or blank it falls back
-    to the VPA handle, then to "Unknown Payee".
-
-    Falls back to treating the raw string as the payee name if it isn't
-    a UPI URI, so arbitrary QR codes can still be used for the demo.
-    """
     data = (data or "").strip()
     parsed = urlparse(data)
     params = parse_qs(parsed.query)
@@ -98,7 +81,6 @@ def scan_image_file(path: str) -> UpiPayload:
 
 
 def scan_from_webcam(camera_index: int = 0) -> UpiPayload:
-    """Open the webcam and scan until a QR code is found or 'q' is pressed."""
     cap = cv2.VideoCapture(camera_index)
     if not cap.isOpened():
         raise QRScanError("Could not open webcam")

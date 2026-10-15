@@ -43,7 +43,6 @@ function fillForm(data) {
   rawUpiInput.value = data.raw || "";
 }
 
-// ---- Upload flow ----
 document.getElementById("uploadScanBtn").addEventListener("click", async () => {
   const fileInput = document.getElementById("fileInput");
   if (!fileInput.files.length) {
@@ -65,7 +64,6 @@ document.getElementById("uploadScanBtn").addEventListener("click", async () => {
   }
 });
 
-// ---- Camera flow ----
 const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const startCamBtn = document.getElementById("startCamBtn");
@@ -141,7 +139,6 @@ async function decodeRaw(raw) {
 startCamBtn.addEventListener("click", startCamera);
 stopCamBtn.addEventListener("click", stopCamera);
 
-// ---- Generate receipt ----
 const receiptImg = document.getElementById("receiptImg");
 const previewPlaceholder = document.getElementById("previewPlaceholder");
 const downloadLink = document.getElementById("downloadLink");

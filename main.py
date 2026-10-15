@@ -1,5 +1,3 @@
-"""CLI: scan a UPI QR code and generate a watermarked DEMO receipt image."""
-
 from __future__ import annotations
 
 import argparse

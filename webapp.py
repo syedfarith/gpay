@@ -1,8 +1,3 @@
-"""Flask web UI: scan a UPI QR (upload or camera) and generate a watermarked DEMO receipt.
-
-Gated behind a simple login so only people you've shared credentials with can use it.
-"""
-
 from __future__ import annotations
 
 import io

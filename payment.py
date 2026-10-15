@@ -1,5 +1,3 @@
-"""Sample payment processing module."""
-
 from __future__ import annotations
 
 import uuid
@@ -31,8 +29,6 @@ class Payment:
 
 
 class PaymentGateway:
-    """Minimal in-memory payment gateway for demos/testing."""
-
     def __init__(self) -> None:
         self._balances: dict[str, float] = {}
         self._payments: dict[str, Payment] = {}

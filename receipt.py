@@ -80,7 +80,6 @@ def generate_receipt(payload: UpiPayload, amount_override: float | None, out_pat
     )
     draw.text((bx0 + 14, by0 + 8), badge_text, font=badge_font, fill=(255, 150, 150))
 
-    # Success check circle
     r = 100
 
     cy = 240
@@ -93,15 +92,12 @@ def generate_receipt(payload: UpiPayload, amount_override: float | None, out_pat
         rr = check_w / 2
         draw.ellipse([px - rr, py - rr, px + rr, py + rr], fill=(255, 255, 255))
 
-    # Amount
     draw.text((cx, 420), f"₹{amount:,.0f}", font=_font(96, bold=True), fill=COLOR_TEXT, anchor="ma")
 
-    # Paid to / name / vpa
     draw.text((cx, 560), "Paid to", font=_font(32), fill=COLOR_MUTED, anchor="ma")
     draw.text((cx, 610), payload.payee_name.upper(), font=_font(50, bold=True), fill=COLOR_TEXT, anchor="ma")
     draw.text((cx, 700), payload.payee_vpa, font=_font(32), fill=COLOR_MUTED, anchor="ma")
 
-    # Timestamp
     hour12 = now.hour % 12 or 12
     timestamp = f"{now.day} {now.strftime('%B %Y')}, {hour12}:{now.strftime('%M')} {now.strftime('%p').lower()}"
     draw.text((cx, 770), timestamp, font=_font(30), fill=COLOR_MUTED, anchor="ma")
@@ -112,41 +108,14 @@ def generate_receipt(payload: UpiPayload, amount_override: float | None, out_pat
     # Transaction id, kept visible as part of making this clearly a demo artifact
     draw.text((cx, HEIGHT - 220), f"Txn ID: {txn_id}", font=_font(20), fill=COLOR_MUTED, anchor="ma")
 
-    # Powered by UPI badge
-    draw.text((cx, HEIGHT - 150), "POWERED BY", font=_font(16, bold=True), fill=COLOR_MUTED, anchor="ma")
-
-    upi_font = _font(38, bold=True)
-    upi_bbox = draw.textbbox((0, 0), "UPI", font=upi_font)
-    upi_w = upi_bbox[2] - upi_bbox[0]
-    upi_h = upi_bbox[3] - upi_bbox[1]
-
-    arrow_w, arrow_h, gap = 18, 24, 8
-    total_w = upi_w + gap + arrow_w
-    group_top = HEIGHT - 122
-    text_x = cx - total_w / 2
-    draw.text((text_x, group_top), "UPI", font=upi_font, fill=COLOR_TEXT, anchor="la")
-
-    arrow_x = text_x + upi_w + gap
-    arrow_cy = group_top + upi_h / 2
-    draw.polygon(
-        [
-            (arrow_x, arrow_cy - arrow_h / 2),
-            (arrow_x + arrow_w, arrow_cy),
-            (arrow_x, arrow_cy + arrow_h / 2),
-        ],
-        fill=COLOR_TEXT,
-    )
-
-    draw.text(
-        (cx, HEIGHT - 82), "UNIFIED PAYMENTS INTERFACE", font=_font(14), fill=COLOR_MUTED, anchor="ma"
-    )
-    draw.text(
-        (cx, HEIGHT - 40),
-        "Demo image only - not a real financial record",
-        font=_font(15),
-        fill=COLOR_MUTED,
-        anchor="ma",
-    )
+    badge = Image.open(Path(__file__).parent / "assets" / "upi_badge.png").convert("RGB")
+    badge = badge.point(lambda p: 0 if p < 40 else p)
+    badge_h = 110
+    badge_w = int(badge.width * badge_h / badge.height)
+    badge = badge.resize((badge_w, badge_h))
+    badge_x = int(cx - badge_w / 2)
+    badge_y = HEIGHT - 150
+    img.paste(badge, (badge_x, badge_y))
 
     img = _draw_watermark(img)
 
