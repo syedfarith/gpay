@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sign in — UPI Pay (DEMO)</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+<style>
+  .login-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .login-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    width: 100%;
+    max-width: 360px;
+  }
+  .login-card h1 { font-size: 1.2rem; margin: 0 0 4px; }
+  .login-card p.muted { margin: 0 0 18px; }
+  .login-error {
+    color: #c22;
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="login-wrap">
+  <form class="login-card" method="post">
+    <h1>UPI Pay <span class="badge">DEMO</span></h1>
+    <p class="muted">Sign in to access the demo receipt generator.</p>
+    {% if error %}<p class="login-error">{{ error }}</p>{% endif %}
+    <label>Username
+      <input type="text" name="username" autocomplete="username" required />
+    </label>
+    <br />
+    <label>Password
+      <input type="password" name="password" autocomplete="current-password" required />
+    </label>
+    <br />
+    <button type="submit">Sign in</button>
+  </form>
+</div>
+</body>
+</html>

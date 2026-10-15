@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>UPI Pay (DEMO) — QR Receipt Generator</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+<header class="topbar">
+  <h1>UPI Pay <span class="badge">DEMO</span></h1>
+  <p class="subtitle">Sandbox tool — scans a UPI QR and generates a watermarked demo receipt. No real money moves.</p>
+</header>
+
+<main class="layout">
+  <section class="panel">
+    <h2>1. Scan a QR code</h2>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="upload">Upload image</button>
+      <button class="tab-btn" data-tab="camera">Use camera</button>
+    </div>
+
+    <div class="tab-panel" id="tab-upload">
+      <input type="file" id="fileInput" accept="image/*" />
+      <button id="uploadScanBtn">Scan uploaded image</button>
+    </div>
+
+    <div class="tab-panel hidden" id="tab-camera">
+      <video id="video" playsinline muted></video>
+      <canvas id="canvas" class="hidden"></canvas>
+      <div class="camera-controls">
+        <button id="startCamBtn">Start camera</button>
+        <button id="stopCamBtn" disabled>Stop camera</button>
+      </div>
+      <p id="camStatus" class="muted">Camera is off.</p>
+    </div>
+
+    <p id="scanStatus" class="status"></p>
+
+    <h2>2. Confirm details</h2>
+    <form id="detailsForm">
+      <label>Payee name
+        <input type="text" id="payeeName" placeholder="e.g. Sharma General Store" />
+      </label>
+      <label>UPI ID
+        <input type="text" id="payeeVpa" placeholder="e.g. shopkeeper@okaxis" />
+      </label>
+      <label>Amount (INR)
+        <input type="number" id="amount" step="0.01" min="0.01" required />
+      </label>
+      <label>Note
+        <input type="text" id="note" placeholder="optional" />
+      </label>
+      <input type="hidden" id="rawUpi" />
+      <button type="submit" id="generateBtn">Generate demo receipt</button>
+    </form>
+  </section>
+
+  <section class="panel preview-panel">
+    <h2>3. Receipt preview</h2>
+    <div class="preview-box">
+      <img id="receiptImg" class="hidden" alt="Generated demo receipt" />
+      <p id="previewPlaceholder" class="muted">Scan a QR and generate to see the receipt here.</p>
+    </div>
+    <a id="downloadLink" class="hidden" download="demo_receipt.png">Download image</a>
+  </section>
+</main>
+
+<footer class="footer">
+  Every generated image is stamped with a non-removable "DEMO" watermark. This tool does not process real payments.
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.js"></script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
