@@ -15,6 +15,14 @@ tabButtons.forEach((btn) => {
   });
 });
 
+async function handleApiResponse(res) {
+  if (res.status === 401) {
+    window.location.href = "/login";
+    throw new Error("Session expired - redirecting to sign in");
+  }
+  return res;
+}
+
 const scanStatus = document.getElementById("scanStatus");
 const payeeNameInput = document.getElementById("payeeName");
 const payeeVpaInput = document.getElementById("payeeVpa");
@@ -47,7 +55,7 @@ document.getElementById("uploadScanBtn").addEventListener("click", async () => {
 
   setStatus("Scanning image...", "");
   try {
-    const res = await fetch("/api/scan-image", { method: "POST", body: formData });
+    const res = await handleApiResponse(await fetch("/api/scan-image", { method: "POST", body: formData }));
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || "Scan failed");
     fillForm(data);
@@ -114,11 +122,13 @@ function scanLoop() {
 async function decodeRaw(raw) {
   setStatus("Decoding scanned data...", "");
   try {
-    const res = await fetch("/api/decode-upi", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ raw }),
-    });
+    const res = await handleApiResponse(
+      await fetch("/api/decode-upi", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ raw }),
+      })
+    );
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || "Decode failed");
     fillForm(data);
@@ -143,17 +153,19 @@ document.getElementById("detailsForm").addEventListener("submit", async (e) => {
   generateBtn.textContent = "Generating...";
 
   try {
-    const res = await fetch("/api/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        payee_name: payeeNameInput.value,
-        payee_vpa: payeeVpaInput.value,
-        amount: amountInput.value,
-        note: noteInput.value,
-        raw: rawUpiInput.value,
-      }),
-    });
+    const res = await handleApiResponse(
+      await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          payee_name: payeeNameInput.value,
+          payee_vpa: payeeVpaInput.value,
+          amount: amountInput.value,
+          note: noteInput.value,
+          raw: rawUpiInput.value,
+        }),
+      })
+    );
     if (!res.ok) {
       const data = await res.json();
       throw new Error(data.error || "Generation failed");

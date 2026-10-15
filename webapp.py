@@ -40,6 +40,8 @@ def login_required(view):
     @wraps(view)
     def wrapped(*args, **kwargs):
         if not session.get("logged_in"):
+            if request.path.startswith("/api/"):
+                return jsonify(error="Session expired, please sign in again"), 401
             return redirect(url_for("login", next=request.path))
         return view(*args, **kwargs)
 
