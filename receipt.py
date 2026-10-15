@@ -9,7 +9,6 @@ mistaken for a genuine receipt.
 
 from __future__ import annotations
 
-import uuid
 from datetime import datetime
 from pathlib import Path
 
@@ -64,7 +63,6 @@ def generate_receipt(payload: UpiPayload, amount_override: float | None, out_pat
         raise ValueError("No amount provided by QR code or override")
 
     now = datetime.now()
-    txn_id = f"DEMO{uuid.uuid4().hex[:12].upper()}"
 
     img = Image.new("RGB", (WIDTH, HEIGHT), COLOR_BG)
     draw = ImageDraw.Draw(img)
@@ -104,9 +102,6 @@ def generate_receipt(payload: UpiPayload, amount_override: float | None, out_pat
 
     if payload.note:
         draw.text((cx, 820), payload.note, font=_font(24), fill=COLOR_MUTED, anchor="ma")
-
-    # Transaction id, kept visible as part of making this clearly a demo artifact
-    draw.text((cx, HEIGHT - 220), f"Txn ID: {txn_id}", font=_font(20), fill=COLOR_MUTED, anchor="ma")
 
     badge = Image.open(Path(__file__).parent / "assets" / "upi_badge.png").convert("RGB")
     badge = badge.point(lambda p: 0 if p < 40 else p)
