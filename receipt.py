@@ -29,7 +29,9 @@ COLOR_DEMO_BADGE = (220, 60, 60)
 
 def _font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont:
     candidates = (
-        ["segoeuib.ttf", "arialbd.ttf"] if bold else ["segoeui.ttf", "arial.ttf"]
+        ["segoeuib.ttf", "arialbd.ttf", "/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf"]
+        if bold
+        else ["segoeui.ttf", "arial.ttf", "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf"]
     )
     for name in candidates:
         try:
